@@ -2,7 +2,10 @@
 
 ## What does the app do?
 
-Analyzes URLs in order to find out if they phishing attempts or not.
+Analyzes URLs in order to find out if they phishing attempts or not, while offering a clean and simple
+UI interface.
+
+Basically, this app let's somebody:
 
 1. The user provides an URL to be analyzed;
 2. The URL is sent to an analysis server that hosts an intelligent URL phishing detection model;
@@ -27,7 +30,7 @@ Analyzes URLs in order to find out if they phishing attempts or not.
 1. The LLM was pointing to a path that didn't exist in my Angular Project (```src/app/app.module.ts```) because
 I defined the component to be standalone. This makes to each component handles its dependecies alone.
 So, what I did? I explained to him in greater detail that my components were as he defined them, but created using
-```ng g c <nume> --standalone```. After this explanation, he understood and we moved on.
+```ng g c <nume> --standalone```. After this explanation, he understood and we moved on;
 
 2. Another thingh was that it generated some CSS code that had classes/ids that weren't defined in HTML. This was a simple fix,
-seeing as I only repaired the references between the files
+seeing as I only repaired the references between the files.
