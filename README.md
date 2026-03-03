@@ -13,7 +13,8 @@ The app allows a user to:
 3. Analyze the URL and store the results for future use (training and fine-tuning);
 4. Receive a clear verdict on whether the URL is safe or a phishing attempt;
 5. Browse results from previous analyses;
-6. Update feedback on an analyzed URL and re-analyze it if needed.
+6. Update feedback on an analyzed URL and re-analyze it if needed;
+7. See a pie chart that shows the report between phishing and legitimate URLs.
 
 ## Which LLMs/Tools were used to build this project:
 
