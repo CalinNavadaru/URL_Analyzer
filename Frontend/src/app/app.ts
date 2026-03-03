@@ -9,6 +9,8 @@ import { Toast } from 'primeng/toast';
 import { DatePipe, NgClass } from '@angular/common';
 import { Tooltip } from 'primeng/tooltip';
 import { SelectButton } from 'primeng/selectbutton';
+import { ChartData, ChartOptions } from 'chart.js';
+import { UIChart } from 'primeng/chart';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +24,7 @@ import { SelectButton } from 'primeng/selectbutton';
     DatePipe,
     Tooltip,
     SelectButton,
+    UIChart,
   ],
   providers: [MessageService],
   templateUrl: './app.html',
@@ -38,6 +41,18 @@ export class App implements OnInit {
     { label: 'Safe', value: 'Safe' },
     { label: 'Phishing', value: 'Phishing' },
   ];
+
+  pieData: ChartData<'pie', number[], string> = {
+    labels: ['Safe', 'Phishing'],
+    datasets: [{ data: [0, 0], backgroundColor: ['#42A5F5', '#FF6384'] }],
+  };
+
+  pieOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom' },
+    },
+  };
 
   constructor(
     private service: UrlCheckService,
@@ -56,6 +71,7 @@ export class App implements OnInit {
       this.currentPage = page;
       this.isNotLoaded = false;
       this.cd.detectChanges();
+      this.updateChart();
     });
   }
 
@@ -96,16 +112,36 @@ export class App implements OnInit {
 
   deleteURL(id: number) {
     this.service.delete(id).subscribe({
-      next: () => this.loadHistory(this.currentPage, this.rowsPerPage),
+      next: () => {
+        this.loadHistory(this.currentPage, this.rowsPerPage);
+      },
       error: (err) => console.error('Delete failed', err),
     });
   }
 
-  protected updateFeedback(row: any) {
+  updateFeedback(row: any) {
     this.service.update(row.id, { user_feedback: row.user_feedback }).subscribe({
-      next: () => console.log('Feedback updated! Thank you'),
+      next: () => {
+        console.log('Feedback updated! Thank you');
+      },
       error: (err) => console.error('Failed to update feedback', err),
     });
+  }
+
+  updateChart() {
+    const safe = this.checks.filter((c) => c.verdict === 'Safe').length;
+    const phishing = this.checks.filter((c) => c.verdict === 'Phishing').length;
+
+    this.pieData = {
+      labels: ['Safe', 'Phishing'],
+      datasets: [
+        {
+          data: [safe, phishing],
+          backgroundColor: ['#03dac6', '#cf6679'],
+        },
+      ],
+    };
+    this.cd.detectChanges();
   }
 
   reanalyzeURL(id: number) {
