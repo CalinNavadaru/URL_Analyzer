@@ -1,4 +1,8 @@
+import datetime
+from datetime import timezone
+from django.utils import timezone
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -39,3 +43,17 @@ class URLCheckViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response({"message": "URL deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['post'])
+    def reanalyze(self, request, pk=None):
+        url_check = self.get_object()
+        try:
+            verdict = predict(url_check.url)
+            url_check.verdict = verdict
+            url_check.checked_at = timezone.now()
+            url_check.save()
+        except Exception:
+            return Response({"error": "Error at URL re-analysis"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        serializer = self.get_serializer(url_check)
+        return Response(serializer.data)

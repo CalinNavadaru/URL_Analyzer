@@ -13,6 +13,7 @@ export interface URLCheck {
   url: string;
   verdict: string;
   checked_at?: string;
+  user_feedback?: string;
 }
 
 @Injectable({
@@ -33,5 +34,17 @@ export class UrlCheckService {
       params = params.set('size', size);
     }
     return this.http.get<Results>(this.API_URL, { params });
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.API_URL}${id}/`);
+  }
+
+  update(id: number, data: Partial<URLCheck>): Observable<URLCheck> {
+    return this.http.patch<URLCheck>(`${this.API_URL}${id}/`, data);
+  }
+
+  reanalyze(id: number): Observable<URLCheck> {
+    return this.http.post<URLCheck>(`${this.API_URL}${id}/reanalyze/`, {});
   }
 }

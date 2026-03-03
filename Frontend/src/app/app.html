@@ -14,6 +14,7 @@
            [lazy]="true"
            [totalRecords]="totalItems"
            stripedRows
+           [first]="(currentPage - 1) * rowsPerPage"
            [loading]="isNotLoaded"
            (onPage)="onPageChange($event)">
     <ng-template pTemplate="header">
@@ -21,6 +22,10 @@
         <th>URL</th>
         <th>Verdict</th>
         <th>Checked At</th>
+        <th>Delete</th>
+        <th>Feedback</th>
+        <th>Provide Feedback</th>
+        <th>Re-analyze</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-row>
@@ -28,6 +33,33 @@
         <td>{{ row.url }}</td>
         <td [ngClass]="{'phishing': row.verdict === 'Phishing', 'safe': row.verdict === 'Safe'}">{{ row.verdict }}</td>
         <td>{{ row.checked_at | date:'long' }}</td>
+        <td>
+          <button pButton
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-danger p-button-sm"
+                  (click)="deleteURL(row.id)"
+                  pTooltip="Delete URL"
+                  tooltipPosition="top">
+          </button>
+        </td>
+        <td [ngClass]="{'phishing': row.user_feedback === 'Phishing', 'safe': row.user_feedback === 'Safe'}">
+          {{ row.user_feedback }}
+        </td>
+        <td>
+          <p-selectButton [options]="feedbackOptions"
+                          [(ngModel)]="row.user_feedback"
+                          (onChange)="updateFeedback(row)">
+          </p-selectButton>
+        </td>
+        <td>
+          <button pButton type="button"
+                  label="Re-analyze"
+                  icon="pi pi-refresh"
+                  class="p-button-info p-button-sm"
+                  (click)="reanalyzeURL(row.id)">
+          </button>
+        </td>
       </tr>
     </ng-template>
   </p-table>
